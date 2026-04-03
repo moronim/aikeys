@@ -1,6 +1,6 @@
 bin/
 *.store
 *.enc
-.aikeys.store
+.llmvlt.store
 .env
-.aikeys.yml
+.llmvlt.yml

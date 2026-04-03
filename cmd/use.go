@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/moronim/aikeys/preset"
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/preset"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 )
 
@@ -16,14 +16,14 @@ var useCmd = &cobra.Command{
 script across multiple LLM providers.
 
 When you "use" a provider, only that provider's secrets are injected by
-'aikeys run'. Other secrets remain in the vault but are not exported.
+'llmvlt run'. Other secrets remain in the vault but are not exported.
 
 Use "all" to re-enable all providers.
 
 Examples:
-  aikeys use anthropic   # only Anthropic keys active
-  aikeys use openai      # switch to OpenAI
-  aikeys use all         # re-enable everything`,
+  llmvlt use anthropic   # only Anthropic keys active
+  llmvlt use openai      # switch to OpenAI
+  llmvlt use all         # re-enable everything`,
 	Args: cobra.ExactArgs(1),
 	RunE: runUse,
 }
@@ -40,7 +40,7 @@ func runUse(cmd *cobra.Command, args []string) error {
 		if _, err := preset.Get(provider + "-stack"); err != nil {
 			// Try without -stack suffix
 			if _, err := preset.Get(provider); err != nil {
-				return fmt.Errorf("unknown provider %q — run 'aikeys presets' to see available providers", provider)
+				return fmt.Errorf("unknown provider %q — run 'llmvlt presets' to see available providers", provider)
 			}
 		}
 	}
@@ -65,7 +65,7 @@ func runUse(cmd *cobra.Command, args []string) error {
 	if provider == "all" {
 		fmt.Fprintln(os.Stderr, "✓ All providers active")
 	} else {
-		fmt.Fprintf(os.Stderr, "✓ Switched to %s — only %s keys will be injected by 'aikeys run'\n", provider, provider)
+		fmt.Fprintf(os.Stderr, "✓ Switched to %s — only %s keys will be injected by 'llmvlt run'\n", provider, provider)
 	}
 
 	return nil

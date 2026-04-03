@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/moronim/aikeys/store"
-	"github.com/moronim/aikeys/validator"
+	"github.com/moronim/llmvlt/store"
+	"github.com/moronim/llmvlt/validator"
 	"github.com/spf13/cobra"
 )
 
@@ -20,8 +20,8 @@ The tool validates key formats for known providers (OpenAI, Anthropic, etc.)
 and warns if the format looks wrong — but never blocks the operation.
 
 Examples:
-  aikeys set OPENAI_API_KEY sk-abc123...
-  echo "sk-abc123..." | aikeys set OPENAI_API_KEY`,
+  llmvlt set OPENAI_API_KEY sk-abc123...
+  echo "sk-abc123..." | llmvlt set OPENAI_API_KEY`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: runSet,
 }

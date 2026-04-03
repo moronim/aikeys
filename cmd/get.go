@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 )
@@ -18,8 +18,8 @@ If stdout is a terminal, the value is printed with a trailing newline.
 If piped, the raw value is output (no newline) for safe scripting.
 
 Examples:
-  aikeys get OPENAI_API_KEY
-  export OPENAI_API_KEY=$(aikeys get OPENAI_API_KEY)`,
+  llmvlt get OPENAI_API_KEY
+  export OPENAI_API_KEY=$(llmvlt get OPENAI_API_KEY)`,
 	Args: cobra.ExactArgs(1),
 	RunE: runGet,
 }
@@ -47,7 +47,7 @@ func runGet(cmd *cobra.Command, args []string) error {
 	}
 
 	if value == "" {
-		return fmt.Errorf("secret %q exists but has no value — set it with: aikeys set %s <value>", key, key)
+		return fmt.Errorf("secret %q exists but has no value — set it with: llmvlt set %s <value>", key, key)
 	}
 
 	// If stdout is a TTY, add newline. If piped, output raw.

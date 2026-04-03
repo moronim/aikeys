@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/moronim/aikeys/preset"
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/preset"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 )
 
@@ -19,8 +19,8 @@ Keys with empty values (scaffolded but not yet filled) are marked with ⬚.
 Keys recognized as part of a known provider preset show the provider name.
 
 Examples:
-  aikeys list
-  aikeys ls`,
+  llmvlt list
+  llmvlt ls`,
 	RunE: runList,
 }
 
@@ -41,7 +41,7 @@ func runList(cmd *cobra.Command, args []string) error {
 
 	keys := v.Keys()
 	if len(keys) == 0 {
-		fmt.Println("Vault is empty. Add secrets with: aikeys set KEY value")
+		fmt.Println("Vault is empty. Add secrets with: llmvlt set KEY value")
 		return nil
 	}
 

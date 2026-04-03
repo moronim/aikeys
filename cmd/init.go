@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/moronim/aikeys/preset"
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/preset"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 )
 
@@ -15,9 +15,9 @@ var initCmd = &cobra.Command{
 	Long: `Initialize a new encrypted vault, optionally with a provider preset.
 
 Examples:
-  aikeys init
-  aikeys init --preset openai-stack
-  aikeys init --preset full-llm-stack`,
+  llmvlt init
+  llmvlt init --preset openai-stack
+  llmvlt init --preset full-llm-stack`,
 	RunE: runInit,
 }
 
@@ -31,7 +31,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 
 	// Check if store already exists
 	if _, err := os.Stat(storePath); err == nil {
-		return fmt.Errorf("vault already exists at %s — use 'aikeys set' to add secrets", storePath)
+		return fmt.Errorf("vault already exists at %s — use 'llmvlt set' to add secrets", storePath)
 	}
 
 	// Get password
@@ -48,7 +48,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	if presetName != "" {
 		p, err := preset.Get(presetName)
 		if err != nil {
-			return fmt.Errorf("unknown preset %q — run 'aikeys presets' to see available presets", presetName)
+			return fmt.Errorf("unknown preset %q — run 'llmvlt presets' to see available presets", presetName)
 		}
 
 		for _, s := range p.AllSecrets() {
@@ -62,12 +62,12 @@ func runInit(cmd *cobra.Command, args []string) error {
 			if !s.Required {
 				marker = "(optional)"
 			}
-			fmt.Fprintf(os.Stderr, "    aikeys set %s  %s\n", s.Key, marker)
+			fmt.Fprintf(os.Stderr, "    llmvlt set %s  %s\n", s.Key, marker)
 		}
 	} else {
 		fmt.Fprintln(os.Stderr, "✓ Initialized empty vault")
-		fmt.Fprintln(os.Stderr, "  Add secrets with: aikeys set KEY value")
-		fmt.Fprintln(os.Stderr, "  Or init with a preset: aikeys init --preset openai-stack")
+		fmt.Fprintln(os.Stderr, "  Add secrets with: llmvlt set KEY value")
+		fmt.Fprintln(os.Stderr, "  Or init with a preset: llmvlt init --preset openai-stack")
 	}
 
 	// Save

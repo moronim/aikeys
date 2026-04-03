@@ -21,9 +21,9 @@ type Entry struct {
 func historyPath() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return ".aikeys_history.jsonl"
+		return ".llmvlt_history.jsonl"
 	}
-	dir := filepath.Join(home, ".aikeys")
+	dir := filepath.Join(home, ".llmvlt")
 	os.MkdirAll(dir, 0700)
 	return filepath.Join(dir, "history.jsonl")
 }

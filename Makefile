@@ -1,4 +1,4 @@
-BINARY_NAME=aikeys
+BINARY_NAME=llmvlt
 VERSION?=0.1.0
 LDFLAGS=-ldflags "-X main.version=$(VERSION)"
 

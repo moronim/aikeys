@@ -13,9 +13,9 @@ import (
 var cfgFile string
 
 var rootCmd = &cobra.Command{
-	Use:   "aikeys",
+	Use:   "llmvlt",
 	Short: "A secret manager built for AI/ML engineers",
-	Long: `aikeys is a CLI secret manager designed specifically for AI/ML engineers.
+	Long: `llmvlt is a CLI secret manager designed specifically for AI/ML engineers.
 It knows your providers (OpenAI, Anthropic, HuggingFace, etc.), validates
 key formats, injects secrets into your scripts, and tracks which experiments
 used which key versions.`,
@@ -31,7 +31,7 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is .aikeys.yml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is .llmvlt.yml)")
 	rootCmd.PersistentFlags().StringP("password", "p", "", "master password for the vault")
 	rootCmd.PersistentFlags().StringP("store", "s", "", "path to the vault store file")
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")
@@ -53,12 +53,12 @@ func initConfig() {
 
 		// Search in current directory, then home
 		viper.AddConfigPath(".")
-		viper.AddConfigPath(filepath.Join(home, ".aikeys"))
-		viper.SetConfigName(".aikeys")
+		viper.AddConfigPath(filepath.Join(home, ".llmvlt"))
+		viper.SetConfigName(".llmvlt")
 		viper.SetConfigType("yml")
 	}
 
-	viper.SetEnvPrefix("AIKEYS")
+	viper.SetEnvPrefix("LLMVLT")
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_", ".", "_"))
 
@@ -66,7 +66,7 @@ func initConfig() {
 
 	// Set defaults
 	if viper.GetString("store") == "" {
-		viper.Set("store", ".aikeys.store")
+		viper.Set("store", ".llmvlt.store")
 	}
 }
 
@@ -81,7 +81,7 @@ func getPassword() (string, error) {
 	}
 
 	// Check environment
-	pw = os.Getenv("AIKEYS_PASSWORD")
+	pw = os.Getenv("LLMVLT_PASSWORD")
 	if pw != "" {
 		return pw, nil
 	}

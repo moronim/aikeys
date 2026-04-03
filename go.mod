@@ -1,4 +1,4 @@
-module github.com/moronim/aikeys
+module github.com/moronim/llmvlt
 
 go 1.25.0
 

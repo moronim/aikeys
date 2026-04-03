@@ -3,7 +3,7 @@ package validator
 import (
 	"regexp"
 
-	"github.com/moronim/aikeys/preset"
+	"github.com/moronim/llmvlt/preset"
 )
 
 // ValidationResult is returned after checking a secret value.

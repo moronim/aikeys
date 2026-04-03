@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ var unsetCmd = &cobra.Command{
 	Long: `Remove a secret by key. This is permanent.
 
 Examples:
-  aikeys unset OPENAI_API_KEY`,
+  llmvlt unset OPENAI_API_KEY`,
 	Args: cobra.ExactArgs(1),
 	RunE: runUnset,
 }

@@ -3,19 +3,19 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/moronim/aikeys/history"
+	"github.com/moronim/llmvlt/history"
 	"github.com/spf13/cobra"
 )
 
 var historyCmd = &cobra.Command{
 	Use:   "history",
 	Short: "Show experiment run history",
-	Long: `Display a log of commands executed via 'aikeys run', including which
+	Long: `Display a log of commands executed via 'llmvlt run', including which
 secrets were active and any experiment tags.
 
 Examples:
-  aikeys history
-  aikeys history --last 10`,
+  llmvlt history
+  llmvlt history --last 10`,
 	RunE: runHistory,
 }
 
@@ -32,7 +32,7 @@ func runHistory(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(entries) == 0 {
-		fmt.Println("No history yet. Run a command with: aikeys run -- <command>")
+		fmt.Println("No history yet. Run a command with: llmvlt run -- <command>")
 		return nil
 	}
 

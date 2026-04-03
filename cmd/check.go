@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/moronim/aikeys/preset"
-	"github.com/moronim/aikeys/store"
-	"github.com/moronim/aikeys/validator"
+	"github.com/moronim/llmvlt/preset"
+	"github.com/moronim/llmvlt/store"
+	"github.com/moronim/llmvlt/validator"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ var checkCmd = &cobra.Command{
   - Keys that haven't been rotated in a while (based on preset rotation_days)
 
 Examples:
-  aikeys check`,
+  llmvlt check`,
 	RunE: runCheck,
 }
 

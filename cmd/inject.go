@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/moronim/aikeys/injector"
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/injector"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 )
 
@@ -19,9 +19,9 @@ Formats:
   jupyter  — Python os.environ assignments for notebook cells
 
 Examples:
-  eval $(aikeys inject)
-  aikeys inject --format dotenv > .env
-  aikeys inject --format jupyter  # paste into notebook cell`,
+  eval $(llmvlt inject)
+  llmvlt inject --format dotenv > .env
+  llmvlt inject --format jupyter  # paste into notebook cell`,
 	RunE: runInject,
 }
 

@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/moronim/aikeys/history"
-	"github.com/moronim/aikeys/store"
+	"github.com/moronim/llmvlt/history"
+	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
 )
 
@@ -21,9 +21,9 @@ Secrets are injected into the child process only — they never appear in the
 parent shell, shell history, or ps output.
 
 Examples:
-  aikeys run -- python train.py
-  aikeys run --tag "gpt4-experiment-1" -- python eval.py
-  aikeys run -- jupyter notebook`,
+  llmvlt run -- python train.py
+  llmvlt run --tag "gpt4-experiment-1" -- python eval.py
+  llmvlt run -- jupyter notebook`,
 	DisableFlagParsing: false,
 	RunE:               runRun,
 }
@@ -51,7 +51,7 @@ func runRun(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(cmdArgs) == 0 {
-		return fmt.Errorf("no command specified — usage: aikeys run -- <command>")
+		return fmt.Errorf("no command specified — usage: llmvlt run -- <command>")
 	}
 
 	password, err := getPassword()

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/moronim/aikeys/preset"
+	"github.com/moronim/llmvlt/preset"
 	"github.com/spf13/cobra"
 )
 
@@ -13,8 +13,8 @@ var presetsCmd = &cobra.Command{
 	Long: `Show all built-in presets and their secrets.
 
 Examples:
-  aikeys presets
-  aikeys presets --detail`,
+  llmvlt presets
+  llmvlt presets --detail`,
 	RunE: runPresets,
 }
 
