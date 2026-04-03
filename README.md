@@ -1,12 +1,12 @@
-# aikeys
+# llmvlt
 
 A CLI secret manager built for AI/ML engineers.
 
-`aikeys` knows what `OPENAI_API_KEY` is. It knows what `ANTHROPIC_API_KEY` looks like. It warns you when a key format is wrong, tracks which keys were active during an experiment, and injects them safely into your scripts — without ever touching your shell history.
+`llmvlt` knows what `OPENAI_API_KEY` is. It knows what `ANTHROPIC_API_KEY` looks like. It warns you when a key format is wrong, tracks which keys were active during an experiment, and injects them safely into your scripts — without ever touching your shell history.
 
 ```
-$ aikeys init --preset full-llm-stack
-✓ Vault initialized (.aikeys.store)
+$ llmvlt init --preset full-llm-stack
+✓ Vault initialized (.llmvlt.store)
 ✓ Preset: full-llm-stack — All major LLM provider credentials combined
 
 6 secrets to fill in:
@@ -18,10 +18,10 @@ $ aikeys init --preset full-llm-stack
   WANDB_API_KEY                       (required) Your W&B API key
   LANGCHAIN_API_KEY                   (optional) Your LangSmith API key
 
-$ aikeys set OPENAI_API_KEY sk-...
+$ llmvlt set OPENAI_API_KEY sk-...
 ✓ OPENAI_API_KEY set (version 1)
 
-$ aikeys run -- python train.py
+$ llmvlt run -- python train.py
 ```
 
 ---
@@ -30,7 +30,7 @@ $ aikeys run -- python train.py
 
 `.env` files get committed. API keys get leaked. It happens to everyone.
 
-`aikeys` keeps your secrets in an AES-256 encrypted vault on disk — never in plaintext, never in your shell history, never accidentally pushed to GitHub. And unlike generic secret managers, it understands the specific keys that AI/ML engineers use every day.
+`llmvlt` keeps your secrets in an AES-256 encrypted vault on disk — never in plaintext, never in your shell history, never accidentally pushed to GitHub. And unlike generic secret managers, it understands the specific keys that AI/ML engineers use every day.
 
 ---
 
@@ -39,18 +39,18 @@ $ aikeys run -- python train.py
 ### macOS
 
 ```bash
-brew install yourname/tap/aikeys
+brew install yourname/tap/llmvlt
 ```
 
 ### Linux
 
 ```bash
-curl -sSL https://get.aikeys.dev | sh
+curl -sSL https://get.llmvlt.dev | sh
 ```
 
 ### Windows
 
-Download the latest `.exe` from the [releases page](https://github.com/yourname/aikeys/releases) and add it to your PATH.
+Download the latest `.exe` from the [releases page](https://github.com/yourname/llmvlt/releases) and add it to your PATH.
 
 Or, if you have Go installed, build it yourself (see [Building from source](#building-from-source)).
 
@@ -61,20 +61,20 @@ Or, if you have Go installed, build it yourself (see [Building from source](#bui
 **1. Initialize a vault in your project directory:**
 
 ```bash
-aikeys init --preset openai-stack
+llmvlt init --preset openai-stack
 ```
 
 **2. Set your secrets:**
 
 ```bash
-aikeys set OPENAI_API_KEY sk-...
-aikeys set OPENAI_ORG_ID org-...
+llmvlt set OPENAI_API_KEY sk-...
+llmvlt set OPENAI_ORG_ID org-...
 ```
 
 **3. Run your script with secrets injected:**
 
 ```bash
-aikeys run -- python train.py
+llmvlt run -- python train.py
 ```
 
 Secrets are injected into the subprocess only — they never appear in your parent shell, in `ps aux` output, or in your shell history.
@@ -83,7 +83,7 @@ Secrets are injected into the subprocess only — they never appear in your pare
 
 ## Presets
 
-Presets are the core feature that makes `aikeys` different. Each preset knows which keys a provider uses, what they look like, and how often they should be rotated.
+Presets are the core feature that makes `llmvlt` different. Each preset knows which keys a provider uses, what they look like, and how often they should be rotated.
 
 | Preset | Description |
 |---|---|
@@ -98,13 +98,13 @@ Presets are the core feature that makes `aikeys` different. Each preset knows wh
 List all available presets:
 
 ```bash
-aikeys preset list
+llmvlt preset list
 ```
 
-You can also define your own presets in `~/.aikeys/presets/`:
+You can also define your own presets in `~/.llmvlt/presets/`:
 
 ```yaml
-# ~/.aikeys/presets/my-company.yaml
+# ~/.llmvlt/presets/my-company.yaml
 name: my-company-stack
 description: "Internal API credentials"
 secrets:
@@ -120,73 +120,73 @@ secrets:
 
 ## Commands
 
-### `aikeys init`
+### `llmvlt init`
 
 Initialize a new vault in the current directory.
 
 ```bash
-aikeys init                          # empty vault
-aikeys init --preset openai-stack    # with a preset
+llmvlt init                          # empty vault
+llmvlt init --preset openai-stack    # with a preset
 ```
 
-### `aikeys set`
+### `llmvlt set`
 
 Store a secret. Validates the format against the active preset and warns if something looks wrong — but always stores the value regardless.
 
 ```bash
-aikeys set OPENAI_API_KEY sk-...
-aikeys set HF_TOKEN hf_...
+llmvlt set OPENAI_API_KEY sk-...
+llmvlt set HF_TOKEN hf_...
 ```
 
-### `aikeys get`
+### `llmvlt get`
 
 Retrieve a secret value.
 
 ```bash
-aikeys get OPENAI_API_KEY
+llmvlt get OPENAI_API_KEY
 ```
 
-### `aikeys list`
+### `llmvlt list`
 
 List all secret names stored in the vault. Never prints values.
 
 ```bash
-aikeys list
+llmvlt list
 ```
 
-### `aikeys run`
+### `llmvlt run`
 
 Inject all secrets into a subprocess. The hero command.
 
 ```bash
-aikeys run -- python train.py
-aikeys run -- jupyter notebook
-aikeys run -- pytest tests/
+llmvlt run -- python train.py
+llmvlt run -- jupyter notebook
+llmvlt run -- pytest tests/
 ```
 
 Secrets are available as environment variables inside the subprocess. They are never exposed to the parent shell.
 
-### `aikeys inject`
+### `llmvlt inject`
 
 Export secrets in different formats for use in other contexts.
 
 ```bash
 # Inject into current shell session
-eval $(aikeys inject)
+eval $(llmvlt inject)
 
 # Generate a Jupyter cell to paste into a notebook
-aikeys inject --format jupyter
+llmvlt inject --format jupyter
 
 # Write a .env file (use with caution)
-aikeys inject --format dotenv --out .env
+llmvlt inject --format dotenv --out .env
 ```
 
-### `aikeys check`
+### `llmvlt check`
 
 Check for keys that haven't been rotated recently.
 
 ```bash
-aikeys check
+llmvlt check
 
 # Example output:
 # ⚠  OPENAI_API_KEY — last rotated 94 days ago (recommended: 90 days)
@@ -194,23 +194,23 @@ aikeys check
 # ✓  HF_TOKEN — rotated 45 days ago
 ```
 
-### `aikeys use`
+### `llmvlt use`
 
 Switch between providers when benchmarking the same script across multiple LLMs.
 
 ```bash
-aikeys use anthropic    # activates Anthropic keys
-aikeys use openai       # switches to OpenAI keys
+llmvlt use anthropic    # activates Anthropic keys
+llmvlt use openai       # switches to OpenAI keys
 ```
 
-### `aikeys history`
+### `llmvlt history`
 
 Show which key versions were active during past runs (requires `--tag` on `run`).
 
 ```bash
-aikeys run --tag "gpt4-baseline" -- python eval.py
+llmvlt run --tag "gpt4-baseline" -- python eval.py
 
-aikeys history
+llmvlt history
 # 2026-03-12 10:00  gpt4-baseline     OPENAI_API_KEY@v3
 # 2026-03-11 18:22  claude-comparison ANTHROPIC_API_KEY@v1
 ```
@@ -224,18 +224,18 @@ You need [Go 1.22+](https://go.dev/dl/) installed.
 ### macOS / Linux
 
 ```bash
-git clone https://github.com/yourname/aikeys
-cd aikeys
-go build -o aikeys .
+git clone https://github.com/yourname/llmvlt
+cd llmvlt
+go build -o llmvlt .
 ```
 
 ### Windows (PowerShell or Command Prompt)
 
 ```powershell
-git clone https://github.com/yourname/aikeys
-cd aikeys
-go build -o aikeys.exe .
-.\aikeys.exe --help
+git clone https://github.com/yourname/llmvlt
+cd llmvlt
+go build -o llmvlt.exe .
+.\llmvlt.exe --help
 ```
 
 If Go is not installed on Windows, download the `.msi` installer from [go.dev/dl](https://go.dev/dl). It adds Go to your PATH automatically — no manual setup needed.
@@ -248,29 +248,29 @@ Go has built-in cross-compilation. No extra tools required.
 
 ```bash
 # Windows 64-bit
-GOOS=windows GOARCH=amd64 go build -o dist/aikeys-windows-amd64.exe .
+GOOS=windows GOARCH=amd64 go build -o dist/llmvlt-windows-amd64.exe .
 
 # Windows ARM (Surface, newer laptops)
-GOOS=windows GOARCH=arm64 go build -o dist/aikeys-windows-arm64.exe .
+GOOS=windows GOARCH=arm64 go build -o dist/llmvlt-windows-arm64.exe .
 
 # macOS Apple Silicon
-GOOS=darwin GOARCH=arm64 go build -o dist/aikeys-darwin-arm64 .
+GOOS=darwin GOARCH=arm64 go build -o dist/llmvlt-darwin-arm64 .
 
 # macOS Intel
-GOOS=darwin GOARCH=amd64 go build -o dist/aikeys-darwin-amd64 .
+GOOS=darwin GOARCH=amd64 go build -o dist/llmvlt-darwin-amd64 .
 
 # Linux 64-bit
-GOOS=linux GOARCH=amd64 go build -o dist/aikeys-linux-amd64 .
+GOOS=linux GOARCH=amd64 go build -o dist/llmvlt-linux-amd64 .
 ```
 
 **From Windows (PowerShell):**
 
 ```powershell
 # Linux 64-bit
-$env:GOOS="linux"; $env:GOARCH="amd64"; go build -o dist/aikeys-linux-amd64 .
+$env:GOOS="linux"; $env:GOARCH="amd64"; go build -o dist/llmvlt-linux-amd64 .
 
 # macOS Apple Silicon
-$env:GOOS="darwin"; $env:GOARCH="arm64"; go build -o dist/aikeys-darwin-arm64 .
+$env:GOOS="darwin"; $env:GOARCH="arm64"; go build -o dist/llmvlt-darwin-arm64 .
 ```
 
 Note: on PowerShell, env vars use `$env:VAR="value"` syntax instead of the Unix `VAR=value` prefix.
@@ -293,7 +293,7 @@ platforms=(
 
 for platform in "${platforms[@]}"; do
   IFS='/' read -r os arch ext <<< "$platform"
-  output="dist/aikeys-${VERSION}-${os}-${arch}${ext}"
+  output="dist/llmvlt-${VERSION}-${os}-${arch}${ext}"
   echo "Building $output..."
   GOOS=$os GOARCH=$arch go build \
     -ldflags="-s -w -X main.version=${VERSION}" \
@@ -310,8 +310,8 @@ The `-ldflags="-s -w"` flag strips debug symbols and reduces binary size by ~30%
 ## Security Model
 
 - Secrets are encrypted with **AES-256** using a key derived from your master password via **Argon2id**
-- The vault is a single encrypted file (`.aikeys.store`) — never plaintext
-- `aikeys run` forks a subprocess: secrets are injected into the child process only, never the parent shell
+- The vault is a single encrypted file (`.llmvlt.store`) — never plaintext
+- `llmvlt run` forks a subprocess: secrets are injected into the child process only, never the parent shell
 - Secret values are never written to shell history
 - File permissions on the store are set to `0600` (owner read/write only)
 
