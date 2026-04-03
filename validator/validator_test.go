@@ -21,8 +21,8 @@ func TestValidateOpenAIKey(t *testing.T) {
 			if result.Valid != tt.wantValid {
 				t.Errorf("Validate(OPENAI_API_KEY, %q).Valid = %v, want %v", tt.value, result.Valid, tt.wantValid)
 			}
-			if !tt.wantValid && result.Warning == "" {
-				t.Error("invalid value should produce a warning")
+			if !tt.wantValid && result.Error == "" {
+				t.Error("invalid value should produce an error message")
 			}
 		})
 	}
@@ -79,6 +79,9 @@ func TestValidateReplicateToken(t *testing.T) {
 	if result.Valid {
 		t.Error("invalid Replicate token should fail")
 	}
+	if result.Error == "" {
+		t.Error("invalid Replicate token should have an error message")
+	}
 }
 
 func TestValidateWandbKey(t *testing.T) {
@@ -122,8 +125,8 @@ func TestValidateUnknownKey(t *testing.T) {
 	if !result.Valid {
 		t.Error("unknown keys should always pass validation")
 	}
-	if result.Warning != "" {
-		t.Error("unknown keys should have no warning")
+	if result.Error != "" {
+		t.Error("unknown keys should have no error")
 	}
 }
 
@@ -157,4 +160,30 @@ func TestValidateProjectID(t *testing.T) {
 	if result.Valid {
 		t.Error("invalid project ID should fail")
 	}
+}
+
+func TestValidateErrorIncludesKeyName(t *testing.T) {
+	result := Validate("OPENAI_API_KEY", "bad-value")
+	if !result.Valid && result.Error == "" {
+		t.Fatal("expected error message for invalid key")
+	}
+	if result.Valid {
+		t.Fatal("expected validation to fail")
+	}
+	if len(result.Error) == 0 {
+		t.Error("error message should not be empty")
+	}
+	// Error should mention the key name for clear CLI output
+	if !contains(result.Error, "OPENAI_API_KEY") {
+		t.Errorf("error message %q should contain key name", result.Error)
+	}
+}
+
+func contains(s, substr string) bool {
+	for i := 0; i <= len(s)-len(substr); i++ {
+		if s[i:i+len(substr)] == substr {
+			return true
+		}
+	}
+	return false
 }

@@ -19,7 +19,8 @@ $ llmvlt init --preset full-llm-stack
   LANGCHAIN_API_KEY                   (optional) Your LangSmith API key
 
 $ llmvlt set OPENAI_API_KEY sk-...
-✓ OPENAI_API_KEY set (version 1)
+✓ OPENAI_API_KEY format looks valid
+✓ Secret OPENAI_API_KEY saved
 
 $ llmvlt run -- python train.py
 ```
@@ -131,11 +132,19 @@ llmvlt init --preset openai-stack    # with a preset
 
 ### `llmvlt set`
 
-Store a secret. Validates the format against the active preset and warns if something looks wrong — but always stores the value regardless.
+Store a secret. For known provider keys, the format is validated and the operation is **blocked** if it doesn't match. Use `--force` to override.
 
 ```bash
 llmvlt set OPENAI_API_KEY sk-...
 llmvlt set HF_TOKEN hf_...
+
+# If the format is wrong:
+llmvlt set OPENAI_API_KEY wrong-value
+# ✗ Invalid format. OPENAI_API_KEY: Should start with 'sk-' or 'sk-proj-'. Use --force to store anyway
+
+# Override with --force:
+llmvlt set OPENAI_API_KEY unusual-key --force
+# ⚠ OPENAI_API_KEY: Should start with 'sk-' or 'sk-proj-' — stored despite format mismatch (--force)
 ```
 
 ### `llmvlt get`

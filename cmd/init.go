@@ -7,6 +7,7 @@ import (
 	"github.com/moronim/llmvlt/preset"
 	"github.com/moronim/llmvlt/store"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var initCmd = &cobra.Command{
@@ -34,10 +35,17 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("vault already exists at %s — use 'llmvlt set' to add secrets", storePath)
 	}
 
-	// Get password
-	password, err := promptPasswordConfirm()
-	if err != nil {
-		return err
+	// Get password — use -p flag or env var if provided, otherwise prompt with confirmation
+	password := viper.GetString("password")
+	if password == "" {
+		password = os.Getenv("LLMVLT_PASSWORD")
+	}
+	if password == "" {
+		var err error
+		password, err = promptPasswordConfirm()
+		if err != nil {
+			return err
+		}
 	}
 
 	// Create empty vault

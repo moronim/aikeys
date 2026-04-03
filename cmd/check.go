@@ -58,8 +58,8 @@ func runCheck(cmd *cobra.Command, args []string) error {
 
 		// Validate format
 		result := validator.Validate(key, value)
-		if result.Warning != "" {
-			fmt.Fprintf(os.Stderr, "⚠ %s — %s\n", key, result.Warning)
+		if !result.Valid {
+			fmt.Fprintf(os.Stderr, "⚠ %s — %s\n", key, result.Error)
 			issues++
 			continue
 		}

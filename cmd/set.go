@@ -17,17 +17,19 @@ var setCmd = &cobra.Command{
 	Long: `Set a secret in the vault. If VALUE is omitted, reads from stdin.
 
 The tool validates key formats for known providers (OpenAI, Anthropic, etc.)
-and warns if the format looks wrong — but never blocks the operation.
+and blocks the operation if the format is wrong. Use --force to override.
 
 Examples:
   llmvlt set OPENAI_API_KEY sk-abc123...
-  echo "sk-abc123..." | llmvlt set OPENAI_API_KEY`,
+  echo "sk-abc123..." | llmvlt set OPENAI_API_KEY
+  llmvlt set OPENAI_API_KEY unusual-key --force`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: runSet,
 }
 
 func init() {
 	rootCmd.AddCommand(setCmd)
+	setCmd.Flags().Bool("force", false, "store the secret even if format validation fails")
 }
 
 func runSet(cmd *cobra.Command, args []string) error {
@@ -51,12 +53,17 @@ func runSet(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("value cannot be empty")
 	}
 
+	force, _ := cmd.Flags().GetBool("force")
+
 	// Validate the key format if we know the provider
 	result := validator.Validate(key, value)
-	if result.Warning != "" {
-		fmt.Fprintf(os.Stderr, "⚠ %s\n", result.Warning)
-	}
-	if result.Valid && result.Warning == "" {
+	if !result.Valid {
+		if force {
+			fmt.Fprintf(os.Stderr, "⚠ %s — stored despite format mismatch (--force)\n", result.Error)
+		} else {
+			return fmt.Errorf("✗ Invalid format. %s. Use --force to store anyway", result.Error)
+		}
+	} else if result.Checked {
 		fmt.Fprintf(os.Stderr, "✓ %s format looks valid\n", key)
 	}
 
